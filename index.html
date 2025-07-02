@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto MAPA - Apresentação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0,0,0,0.1);
+            color: white;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"><animate attributeName="r" values="2;8;2" dur="3s" repeatCount="indefinite"/></circle><circle cx="20" cy="30" r="1" fill="white" opacity="0.2"><animate attributeName="r" values="1;4;1" dur="2s" repeatCount="indefinite"/></circle><circle cx="80" cy="70" r="1.5" fill="white" opacity="0.15"><animate attributeName="r" values="1.5;6;1.5" dur="4s" repeatCount="indefinite"/></circle></svg>');
+            background-size: 200px 200px;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 0.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: slideDown 1s ease-out;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 2em;
+            opacity: 0.9;
+            animation: slideUp 1s ease-out 0.5s both;
+        }
+
+        .hero .period {
+            font-size: 1.1em;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .content {
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 60px;
+            color: #764ba2;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .objetivo {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .objetivo-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .objetivo-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 60px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 50%;
+            padding-right: 40px;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 50%;
+            padding-left: 40px;
+            text-align: left;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: 4px solid white;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            z-index: 5;
+        }
+
+        .timeline-content h3 {
+            color: #764ba2;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .timeline-content p {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .timeline-content .highlight {
+            background: linear-gradient(120deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin: 15px 0;
+        }
+
+        .resultados {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .resultados h2 {
+            color: white;
+        }
+
+        .resultados h2::after {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .result-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .result-card .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .result-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .cta {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .wifi-animation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 1000;
+        }
+
+        .wifi-signal {
+            position: absolute;
+            border: 3px solid rgba(255,255,255,0.7);
+            border-radius: 50%;
+            animation: wifiPulse 2s infinite;
+        }
+
+        .wifi-signal:nth-child(1) {
+            width: 20px;
+            height: 20px;
+            top: 20px;
+            left: 20px;
+        }
+
+        .wifi-signal:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            top: 10px;
+            left: 10px;
+            animation-delay: 0.5s;
+        }
+
+        .wifi-signal:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 0;
+            left: 0;
+            animation-delay: 1s;
+        }
+
+        @keyframes wifiPulse {
+            0% {
+                opacity: 1;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin: 0;
+                margin-left: 60px;
+                padding: 20px;
+                text-align: left;
+            }
+            
+            .timeline-dot {
+                left: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wifi-animation">
+        <div class="wifi-signal"></div>
+        <div class="wifi-signal"></div>
+        <div class="wifi-signal"></div>
+    </div>
+
+    <section class="hero">
+        <h1>🗺️ PROJETO MAPA</h1>
+        <div class="subtitle">Monitoramento e Análise de Pontos de Acesso</div>
+        <div class="period">📅 Julho - Dezembro 2025</div>
+        <div class="scroll-indicator">
+            <div style="font-size: 24px;">↓</div>
+            <div>Role para conhecer o projeto</div>
+        </div>
+    </section>
+
+    <div class="content">
+        <section class="objetivo">
+            <div class="objetivo-card">
+                <h2>🎯 Nosso Objetivo</h2>
+                <p style="font-size: 1.2em; color: #555; line-height: 1.6;">
+                    Imagine que você está em uma escola e o Wi-Fi só funciona em alguns lugares. É frustrante, né? 
+                    Nosso projeto é como ser um "detetive do Wi-Fi" 🕵️‍♂️ - vamos descobrir onde o sinal está forte e onde está fraco, 
+                    ajudando as escolas da região do Mato Grande a terem internet melhor para todos!
+                </p>
+                <div class="highlight" style="margin-top: 30px;">
+                    <strong>🎓 O que você vai aprender:</strong> Redes de computadores na prática, análise de dados, trabalho em equipe e como ajudar sua comunidade!
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📋 Como Funciona - Linha do Tempo</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <h3>🚀 Seleção dos Extensionistas</h3>
+                        <p>Vamos selecionar os alunos que querem participar desta aventura tecnológica! É como formar um time de super-heróis da tecnologia.</p>
+                        <div class="highlight">
+                            <strong>Critérios:</strong> Interesse em redes, disponibilidade, bom desempenho acadêmico e vontade de ajudar a comunidade
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <h3>🤝 Planejamento e Parcerias</h3>
+                        <p>Vamos conversar com as escolas e explicar nosso projeto. É como apresentar nossa "receita secreta" para melhorar o Wi-Fi delas!</p>
+                        <div class="highlight">
+                            <strong>Atividades:</strong> Contato com escolas, cronograma de visitas e obtenção de autorizações
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <h3>🎓 Formação Técnica</h3>
+                        <p>Hora de virar expert! Vamos aprender sobre Wi-Fi, sinais, interferências e como usar o aplicativo WiFi Analyzer. É como ganhar "superpoderes" para enxergar o Wi-Fi!</p>
+                        <div class="highlight">
+                            <strong>Conteúdo:</strong> Conceitos de Wi-Fi, análise de sinais, uso de ferramentas e ética profissional
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">4</div>
+                    <div class="timeline-content">
+                        <h3>🔍 Investigação em Campo</h3>
+                        <p>A parte mais legal! Vamos às escolas com nossos smartphones para "mapear" o Wi-Fi. É como ser um explorador digital, descobrindo tesouros escondidos (ou lugares sem sinal!).</p>
+                        <div class="highlight">
+                            <strong>Ferramentas:</strong> WiFi Analyzer, mapas das escolas, formulários de coleta e muito trabalho em equipe!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">5</div>
+                    <div class="timeline-content">
+                        <h3>📊 Análise e Relatórios</h3>
+                        <p>Vamos organizar todos os dados coletados e criar "mapas do tesouro" do Wi-Fi! Cada escola receberá um relatório mostrando onde melhorar.</p>
+                        <div class="highlight">
+                            <strong>Produtos:</strong> Planilhas, mapas de calor, gráficos e sugestões práticas de melhoria
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot">6</div>
+                    <div class="timeline-content">
+                        <h3>🎉 Devolutiva e Celebração</h3>
+                        <p>Vamos apresentar nossos descobrimentos para as escolas! É como entregar um presente que pode melhorar a vida de muitas pessoas.</p>
+                        <div class="highlight">
+                            <strong>Finalização:</strong> Apresentações nas escolas, avaliação do projeto e possível publicação dos resultados
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="resultados">
+            <div class="section">
+                <h2>🏆 O Que Esperamos Alcançar</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="icon">🏫</div>
+                        <h3>6+ Escolas Mapeadas</h3>
+                        <p>Pelo menos 6 escolas da região terão um diagnóstico completo do seu Wi-Fi</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="icon">📋</div>
+                        <h3>Relatórios Técnicos</h3>
+                        <p>Cada escola receberá um guia prático de como melhorar sua conectividade</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="icon">🎓</div>
+                        <h3>Alunos Especializados</h3>
+                        <p>Vocês sairão com experiência real em redes e análise de dados</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="icon">🤝</div>
+                        <h3>IFRN + Comunidade</h3>
+                        <p>Fortalecimento do vínculo entre nossa escola e a sociedade</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>🚀 Pronto para Fazer Parte?</h2>
+            <p style="font-size: 1.2em; margin-bottom: 20px;">
+                Este projeto é sua chance de aplicar conhecimentos técnicos para resolver problemas reais, 
+                desenvolver habilidades profissionais e fazer a diferença na sua comunidade!
+            </p>
+            <p style="font-size: 1.1em; opacity: 0.9;">
+                <strong>💡 Lembre-se:</strong> Não é apenas sobre tecnologia, é sobre pessoas. Cada escola que melhorarmos 
+                vai beneficiar centenas de estudantes, professores e funcionários!
+            </p>
+            <a href="#" class="cta-button" onclick="alert('Entre em contato com a coordenação do projeto para se inscrever!')">
+                Quero Participar! 🙋‍♂️
+            </a>
+        </section>
+    </div>
+
+    <script>
+        // Animação de scroll suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animação dos elementos ao fazer scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos os elementos animáveis
+        document.querySelectorAll('.timeline-item, .objetivo-card, .result-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Efeito de digitação no título
+        const title = document.querySelector('.hero h1');
+        const originalText = title.textContent;
+        title.textContent = '';
+        
+        setTimeout(() => {
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    title.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 100);
+                }
+            };
+            typeWriter();
+        }, 500);
+
+        // Scroll indicator - esconder quando rolar
+        window.addEventListener('scroll', () => {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (window.scrollY > 100) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '1';
+            }
+        });
+
+        // Adicionar efeito de hover nos cards da timeline
+        document.querySelectorAll('.timeline-content').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.background = 'linear-gradient(135deg, #f8f9ff 0%, #e8edff 100%)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.background = 'white';
+            });
+        });
+
+        // Contador animado para os resultados
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current) + '+';
+            }, 50);
+        }
+
+        // Ativar contador quando a seção de resultados aparecer
+        const resultsSection = document.querySelector('.resultados');
+        const resultsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const schoolsCard = document.querySelector('.result-card h3');
+                    if (schoolsCard && schoolsCard.textContent.includes('6+')) {
+                        // Animar apenas uma vez
+                        resultsObserver.unobserve(entry.target);
+                    }
+                }
+            });
+        });
+
+        resultsObserver.observe(resultsSection);
+    </script>
+</body>
+</html>
